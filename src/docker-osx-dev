@@ -441,9 +441,10 @@ function init_docker_host {
 #
 # Installs rsync on the Boot2Docker VM, unless it's already installed.
 #
-function install_rsync_on_docker_host {
+#
+function install_filesync_on_docker_host {
   log_info "Installing rsync in the Docker Host image"
-
+  # TODO: next step figure out unison :-)
   $DOCKER_HOST_SSH_COMMAND "if ! type rsync > /dev/null 2>&1; then tce-load -wi rsync; fi"
 }
 
@@ -625,6 +626,7 @@ function install_dependencies {
   brew_install "docker-machine" "Docker Machine" "docker-machine" false
   brew_install "fswatch" "fswatch" "fswatch" false
   brew_install "coreutils" "GNU core utilities" "greadlink" false
+  brew_install "homebrew/versions/unison240" "Unison" "unison" false
 }
 
 #
@@ -1012,7 +1014,7 @@ function configure_includes {
 function sync {
   log_info "Starting docker-osx-dev file syncing"
   init_docker_host
-  install_rsync_on_docker_host
+  install_filesync_on_docker_host
   initial_sync
 }
 
@@ -1024,7 +1026,7 @@ function install {
   log_info "Starting install of docker-osx-dev"
   install_dependencies
   init_docker_host
-  install_rsync_on_docker_host
+  install_filesync_on_docker_host
   add_docker_host
   add_environment_variables
   print_next_steps
